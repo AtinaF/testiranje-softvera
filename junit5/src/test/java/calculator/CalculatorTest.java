@@ -2,11 +2,14 @@ package calculator;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CalculatorTest {
@@ -30,10 +33,8 @@ public class CalculatorTest {
     }
 
     @ParameterizedTest
-    @CsvSource(value={"20,8,12","8,20,-12",
-                        "-5,-11,6","-10,-4,-6",
-                        "10,-3,13","-10,3,-13",
-                        "30,0,30","-50,0,-50"})
+    @CsvFileSource(files={"src/test/resources/params/calculatorTestingDataSource.csv"},
+                    numLinesToSkip = 1)
     void testSubstract(int a, int b, int expectedValue)
     {
         assertEquals(expectedValue, calculator.subtract(a, b),
@@ -42,14 +43,30 @@ public class CalculatorTest {
 
 
     @ParameterizedTest
-    @CsvSource(value={"10,8,80","8,10,80",
-                        "-3,-9,27","-9,-3,27",
-                        "15,-2,-30","-2,15,-30",
-                        "0, 0, 0",
-                        "65,0,0","-23,0,0"})
-    void testMultiply(int a, int b, int expectedValue) {
+    @MethodSource(value = "getArgumentsForMultiplication")
+    void testMultiply(int a, int b, double expectedValue) {
         assertEquals(expectedValue, calculator.multiply(a, b),
                 "Multiplication failed for {a} * {b}");
+    }
+
+    @ParameterizedTest
+    @MethodSource("calculator.MethodSourceForMultiplicationTest#getArgumentsForMultiplication2")
+    void testMultiply2(int a, int b, double expectedValue) {
+        assertEquals(expectedValue, calculator.multiply(a, b),
+                "Multiplication failed for '{a}' * '{b}'");
+    }
+
+    List<Arguments> getArgumentsForMultiplication()
+    {
+        return Arrays.asList (arguments(10,8,80),
+                            arguments(8,10,80),
+                            arguments(-3,-9,27),
+                            arguments(-9,-3,27),
+                            arguments(15,-2,-30),
+                            arguments(-2,15,-30),
+                            arguments(0, 0, 0),
+                            arguments(65,0,0),
+                            arguments(-23,0,0));
     }
 
     @ParameterizedTest

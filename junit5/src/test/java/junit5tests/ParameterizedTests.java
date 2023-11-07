@@ -116,8 +116,8 @@ public class ParameterizedTests {
     List<Arguments> sourceList_StringDouble() {
         //processing
         return Arrays.asList(arguments("tomato", 2.0),
-                arguments("carrot", 4.5), arguments(
-                        "cabbage", 7.8));
+                            arguments("carrot", 4.5),
+                            arguments("cabbage", 7.8));
     }
 
 

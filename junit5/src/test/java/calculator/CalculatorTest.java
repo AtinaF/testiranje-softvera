@@ -84,7 +84,6 @@ public class CalculatorTest {
                 "Division failed for values {a} / {b}");
     }
 
-//    TODO
     @Test
     void divideWithZero(){
         assertThrows(ArithmeticException.class , () -> calculator.divide(4,0), "You can not divide with 0. ");

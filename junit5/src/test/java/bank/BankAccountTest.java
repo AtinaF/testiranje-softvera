@@ -1,9 +1,8 @@
 package bank;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -18,8 +17,9 @@ public class BankAccountTest {
     }
 
     @ParameterizedTest
-    @ValueSource(doubles = {0, 500})
+    @ValueSource(doubles = {0, 500, -70})
     void testDeposit(double amount) {
+        Assumptions.assumeFalse(amount < 0, "The assumption failed for " + amount);
         bankAccount.deposit(amount);
         Assertions.assertEquals(100+amount, bankAccount.getBalance());
     }
@@ -31,6 +31,14 @@ public class BankAccountTest {
                 "Can not deposite negative amount. ");
     }
 
+    @ParameterizedTest
+    @ValueSource(doubles = {100, 30, -70, 300})
+    void testWithdraw(double amount) {
+        Assumptions.assumeFalse(amount>bankAccount.getBalance(), "The assumption failed for " + amount);
+        Assumptions.assumeFalse(amount<0, "The assumption failed for " + amount);
+        bankAccount.withdraw(amount);
+        Assertions.assertEquals(100.0-amount, bankAccount.getBalance(), "this should work already");
+    }
 
     @ParameterizedTest
     @ValueSource(doubles = {-10, 999})
@@ -38,12 +46,4 @@ public class BankAccountTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> bankAccount.withdraw(amount));
 
     }
-
-    @ParameterizedTest
-    @ValueSource(doubles = {100, 30})
-    void testWithdraw(double amount) {
-        bankAccount.withdraw(amount);
-        Assertions.assertEquals(100.0-amount, bankAccount.getBalance(), "this should work already");
-    }
-
 }

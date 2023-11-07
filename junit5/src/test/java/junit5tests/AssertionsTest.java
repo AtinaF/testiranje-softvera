@@ -13,10 +13,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-//@ExtendWith(Listener.class)
+@ExtendWith(Listener.class)
 public class AssertionsTest {
 
     @Test
+
     void assertEqualsTest() {
         assertEquals("firstString", "secondString", "The String " +
                 "values were not equal");
